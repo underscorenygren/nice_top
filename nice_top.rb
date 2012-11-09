@@ -7,6 +7,7 @@ require "nokogiri"
 require "optparse"
 require "ostruct"
 require "tempfile"
+require "pp"
 
 @options = OpenStruct.new(
   :wallbase_sketch_level => "100"
@@ -21,7 +22,7 @@ options_parser = OptionParser.new do |opts|
 
   opts.on("-h", "--help",
           "Print usage and options") do
-    p opts
+    puts opts.help
     exit
   end
 
@@ -54,7 +55,7 @@ options_parser = OptionParser.new do |opts|
 end
 
 unless @options.source
-  p options_parser
+  puts options_parser.help
   exit
 end
 
@@ -67,7 +68,7 @@ SET_DESKTOP = <<-SCRIPT
 SCRIPT
 
 def set_desktop(image_path)
-  args = SET_DESKTOP.split("\n").map{|l| "-e '#{l}'"}.join(' ')
+  args = SET_DESKTOP.split('\n').map{|l| "-e '#{l}'"}.join(' ')
   `osascript #{args} #{image_path}`
 end
 
