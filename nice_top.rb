@@ -69,7 +69,15 @@ SCRIPT
 
 def set_desktop(image_path)
   args = SET_DESKTOP.split('\n').map{|l| "-e '#{l}'"}.join(' ')
-  `osascript #{args} #{image_path}`
+  if not system("osascript #{args} #{image_path}")
+    p "Couldn't find OS X, trying for Ubuntu"
+    file = File.new('./wallpaper_file', 'w')
+    new_path = File.expand_path(file.path)
+    `cp #{image_path} #{new_path}`
+    ubuntu = "gsettings set org.gnome.desktop.background picture-uri file://#{new_path}"
+    worked = system(ubuntu)
+    p "Success: %s" % worked
+  end
 end
 
 def set_desktop_from_url(url)
